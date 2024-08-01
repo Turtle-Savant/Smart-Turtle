@@ -30,7 +30,7 @@ getcontext().prec = 10  # Adjust the precision as needed
 class IsotopeDistributionSimulator:
     def __init__(self, master):
         self.master = master
-        master.title("Smart Turtle: Isotope Distribution and Mass Spectrometry Simulator (1.17)")
+        master.title("Smart Turtle: Isotope Distribution and Mass Spectrometry Simulator (1.18)")
         
         # Set the icon
         self.icon = PhotoImage(file='smart_turtle_cropped_soft_edges.png')
@@ -187,9 +187,9 @@ class IsotopeDistributionSimulator:
         self.combobox_adduct.grid(row=3, column=1, sticky="w", padx=10, pady=5)
     
         # Right column
-        self.compress_var = tk.BooleanVar(value=True)  # Default checked
-        self.compress_checkbox = tk.Checkbutton(self.advanced_frame, text="Compress Elemental Isotopomers", variable=self.compress_var)
-        self.compress_checkbox.grid(row=0, column=2, sticky="w", padx=10, pady=5)
+        #self.compress_var = tk.BooleanVar(value=True)  # Default checked
+        #self.compress_checkbox = tk.Checkbutton(self.advanced_frame, text="Compress Elemental Isotopomers", variable=self.compress_var)
+        #self.compress_checkbox.grid(row=0, column=2, sticky="w", padx=10, pady=5)
         
         self.fix_graph_var = tk.BooleanVar(value=False)  # Default unchecked
         self.fix_graph_checkbox = tk.Checkbutton(self.advanced_frame, text="Fixate Graph", variable=self.fix_graph_var, command=self.toggle_mz_entry)
@@ -249,7 +249,7 @@ class IsotopeDistributionSimulator:
         self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
     
         # Compress data or not
-        self.compress = self.compress_var.get()
+        #self.compress = self.compress_var.get()
     
         # Add hover tooltips to all labels and checkboxes
         self.add_tooltips()
@@ -310,8 +310,8 @@ class IsotopeDistributionSimulator:
                 self.label_adduct.bind("<Enter>", lambda event: self.show_tooltip(event, "In order for a molecule to be measured by a mass spectrometer, it must first be ionized.\nThis process most commonly happens during a process called electrospray ionization.\nAn electric field is used to isolate small, charged particles at the end of a stream of solvent.\nThis clustering of charged particles causes increased interactions of these species\nwith analytes of interest, causing those analytes to become charged as well.\nThe interaction forms an ionized 'adduct', which has a unique isotopic distribution."))
                 self.label_adduct.bind("<Leave>", self.hide_tooltip)
         
-                self.compress_checkbox.bind("<Enter>", lambda event: self.show_tooltip(event, "Isotopomers are molecules which have the same number of neutrons,\n yet differ in the location of those neutrons.\n In the case where a molecule contains an extra hydrogen neutron,\nand an isomeric molecule has an extra carbon neutron,\n a difference in nuclear binding energy will cause the two\n to have slightly different masses.\nMass spectrometers with high mass resolution can actually\n resolve the mass difference between these isotopomers.\nFor the sake of simplicity, this setting collapses such isotopomers\n into a single data point."))
-                self.compress_checkbox.bind("<Leave>", self.hide_tooltip)
+                #self.compress_checkbox.bind("<Enter>", lambda event: self.show_tooltip(event, "Isotopomers are molecules which have the same number of neutrons,\n yet differ in the location of those neutrons.\n In the case where a molecule contains an extra hydrogen neutron,\nand an isomeric molecule has an extra carbon neutron,\n a difference in nuclear binding energy will cause the two\n to have slightly different masses.\nMass spectrometers with high mass resolution can actually\n resolve the mass difference between these isotopomers.\nFor the sake of simplicity, this setting collapses such isotopomers\n into a single data point."))
+                #self.compress_checkbox.bind("<Leave>", self.hide_tooltip)
         
                 self.label_deuterium.bind("<Enter>", lambda event: self.show_tooltip(event, "Isotopic labeling is a common practice\nwhere researchers intentionally increase the percentage of heavy isotopes\nbeyond their natural occurance.\nThe result has significant impacts on the isotopic distributions\nof molecules in the affected system.\nEnter the percentage of artifical deuterium enrichment"))
                 self.label_deuterium.bind("<Leave>", self.hide_tooltip)
@@ -355,8 +355,8 @@ class IsotopeDistributionSimulator:
                 self.label_adduct.unbind("<Enter>")
                 self.label_adduct.unbind("<Leave>")
         
-                self.compress_checkbox.unbind("<Enter>")
-                self.compress_checkbox.unbind("<Leave>")
+                #self.compress_checkbox.unbind("<Enter>")
+                #self.compress_checkbox.unbind("<Leave>")
         
                 self.label_deuterium.unbind("<Enter>")
                 self.label_deuterium.unbind("<Leave>")
@@ -396,7 +396,7 @@ class IsotopeDistributionSimulator:
     
     def update_boxes(self):
        # Update the value of self.compress when the checkbox is clicked
-       self.compress = self.compress_var.get()
+       #self.compress = self.compress_var.get()
        self.show_centroid = self.centroid_var.get()
        self.show_gaussian = self.gaussian_var.get()
        #print(self.show_gaussian)
@@ -469,7 +469,8 @@ class IsotopeDistributionSimulator:
     "+H⁺": {'H': 1},
     "+Na⁺": {'Na': 1},
     "+K⁺": {'K': 1},
-    "+NH₄⁺": {'N': 1, 'H': 4},"-H⁻": {'H': -1},
+    "+NH₄⁺": {'N': 1, 'H': 4},
+    "-H⁻": {'H': -1},
     "+Cl⁻": {'Cl': 1},
     "+Br⁻": {'Br': 1},
     "+I⁻": {'I': 1},
@@ -568,7 +569,7 @@ class IsotopeDistributionSimulator:
     
             abundances_and_exact_masses.loc[abundances_and_exact_masses['Symbol'] == 'H(2)', 'Abund.'] = deuterium_enrichment
             abundances_and_exact_masses.loc[abundances_and_exact_masses['Symbol'] == 'H(1)', 'Abund.'] = 100 - deuterium_enrichment
-            print(abundances_and_exact_masses.loc[abundances_and_exact_masses['Symbol'] == 'H(2)', 'Abund.'].values)
+            #print(abundances_and_exact_masses.loc[abundances_and_exact_masses['Symbol'] == 'H(2)', 'Abund.'].values)
         
         # Carbon-13 enrichment
         carbon13_enrichment, valid_c13 = get_valid_float(self.entry_c13)
@@ -682,6 +683,7 @@ class IsotopeDistributionSimulator:
                 plt.plot(common_x, total_spectrum, color = self.current_color)
             if self.show_centroid:
                 plt.vlines(isotopic_mz, 0, float_values, linestyles='dashed', color = self.current_color, alpha = 0.5)
+                print(isotopic_mz)
                 
              #Set limits to avoid autoscaling too far out
             #print(self.fix_graph_var.get())
@@ -703,6 +705,7 @@ class IsotopeDistributionSimulator:
         
             # Sort the masses in ascending order
             sorted_masses = sorted(enumerate(masses), key=lambda x: x[1])
+            #print(sorted_masses)
         
             # Initialize variables to track the current x-value and letter index
             current_x_value = 0
@@ -711,7 +714,7 @@ class IsotopeDistributionSimulator:
             # Iterate through the sorted masses
             #print(sorted_masses)
             for idx, mass in sorted_masses:
-                x_value = int(float(str(mass - sorted_masses[0][1])[:3])*self.charge)
+                x_value = round(float(str(mass - sorted_masses[0][1])[:3])*self.charge)
                 #print(x_value)
         
                 # Reset letter index when x-value changes
@@ -735,7 +738,6 @@ class IsotopeDistributionSimulator:
         
             # Remove the lowercase letter if there is only one Neutromer for a particular x-value
             neutromers_list = [label if len(labels) > 1 else f'M{x}' for x, labels in neutromers_dict.items() for label in labels]
-            
             #print(neutromers_list)
             return neutromers_list
             
@@ -748,50 +750,7 @@ class IsotopeDistributionSimulator:
         self.text_output.insert(tk.END, "Normalized Isotopic Distribution:\n")
         #print(normalized_distribution)
         #print(neutromers_list)
-        if self.compress:
-            def compress_neutromers(normalized_distribution, neutromers_list, isotopic_mz):
-                modified_normalized_distribution = []
-                for i in range(len(normalized_distribution)):
-                    Sum = 0
-                    for j in range(len(neutromers_list)):
-                        #print(neutromers_list[i])
-                        number_i = re.search(r'\d+', neutromers_list[i][1:]).group()
-                        number_j = re.search(r'\d+', neutromers_list[j][1:]).group()
-                        #print(f'i number: {number_i}')
-                        #print(f'j number: {number_j}')
-                        if number_i == number_j:
-                            Sum += normalized_distribution[j]
-                    modified_normalized_distribution.append(Sum)
-                    new_normalized_distribution = []
-                    for element in modified_normalized_distribution:
-                        if element not in new_normalized_distribution:
-                            new_normalized_distribution.append(element)
-                    
-                    modified_neutromers_list = modified_neutromers_list = ['M' + re.search(r'\d+', element[1:]).group() for element in neutromers_list]
 
-                    new_neutromers_list = list(dict.fromkeys(modified_neutromers_list))
-                
-                x_values= []
-                for mass in isotopic_mz:
-                    x_value = int(float(str(mass - isotopic_mz[0])[:3])*self.charge)
-                    x_values.append(x_value)
-                    
-                new_isotopic_mz = []  
-                for k in x_values:
-                   counter = 0
-                   averaging = []
-                   for h in range(len(x_values)):
-                       if x_values[h] == k:
-                           counter += 1 
-                           averaging.append(isotopic_mz[h])
-                   new_isotopic_mz.append(sum(averaging)/counter)
-                   new_isotopic_mz = sorted(list(set(new_isotopic_mz)))
-
-                return new_normalized_distribution, new_neutromers_list, new_isotopic_mz
-            
-
-            normalized_distribution, neutromers_list, isotopic_mz = compress_neutromers(normalized_distribution, neutromers_list, isotopic_mz)
-        
         for value, count in zip(range(len(normalized_distribution)), normalized_distribution):
             self.text_output.insert(tk.END, f"{neutromers_list[value]}, Intensity: {round(count, 3)}, m/z: {round(isotopic_mz[value],4)}\n")
 
